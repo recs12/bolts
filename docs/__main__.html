@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="content-type" content="text/html;charset=utf-8">
+  <title>__main__.py</title>
+  <link rel="stylesheet" href="pycco.css">
+</head>
+<body>
+<div id='container'>
+  <div id="background"></div>
+  <div class='section'>
+    <div class='docs'><h1>__main__.py</h1></div>
+  </div>
+  <div class='clearall'>
+  <div class='section' id='section-0'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-0'>#</a>
+      </div>
+      <p>Replace all fasteners from imperial to metric.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">api</span> <span class="kn">import</span> <span class="n">Api</span><span class="p">,</span> <span class="n">PartsOccurrences</span><span class="p">,</span> <span class="n">PartElement</span>
+<span class="kn">from</span> <span class="nn">sources</span> <span class="kn">import</span> <span class="n">screwlib_path</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-1'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-1'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+    <span class="n">session</span> <span class="o">=</span> <span class="n">Api</span><span class="p">()</span>
+    <span class="k">print</span><span class="p">(</span><span class="s2">&quot;* Author: recs&quot;</span><span class="p">)</span>
+    <span class="k">print</span><span class="p">(</span><span class="s2">&quot;* Last update: 2020-00-00&quot;</span><span class="p">)</span>
+    <span class="n">session</span><span class="o">.</span><span class="n">check_valid_version</span><span class="p">(</span><span class="s1">&#39;Solid Edge ST7&#39;</span><span class="p">,</span><span class="s1">&#39;Solid Edge 2019&#39;</span><span class="p">)</span>
+    <span class="n">assembly</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">active_document</span><span class="p">()</span>
+    <span class="k">print</span><span class="p">(</span><span class="s2">&quot;* part-number: </span><span class="si">%s</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">assembly</span><span class="o">.</span><span class="n">name</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-2'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-2'>#</a>
+      </div>
+      <p>Check if part is sheetmetal or other type of part.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">assert</span> <span class="n">assembly</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">&quot;.asm&quot;</span><span class="p">),</span> <span class="s2">&quot;This macro only works on .asm not </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span><span class="n">assembly</span><span class="o">.</span><span class="n">name</span><span class="p">[</span><span class="o">-</span><span class="mi">4</span><span class="p">:]</span>
+
+    <span class="n">parts</span> <span class="o">=</span> <span class="n">PartsOccurrences</span><span class="p">(</span><span class="n">assembly</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-3'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-3'>#</a>
+      </div>
+      <p>Display quantity of parts in the assembly.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="n">quantites</span><span class="p">(</span><span class="n">parts</span><span class="o">.</span><span class="n">count_fasteners</span><span class="p">,</span> <span class="n">parts</span><span class="o">.</span><span class="n">count_imperial</span><span class="p">,</span> <span class="n">parts</span><span class="o">.</span><span class="n">count_metric</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-4'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-4'>#</a>
+      </div>
+      <p>Replace screws.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">for</span> <span class="n">part</span> <span class="ow">in</span> <span class="n">parts</span><span class="o">.</span><span class="n">screws</span><span class="p">():</span>
+        <span class="n">screw</span> <span class="o">=</span>  <span class="n">PartElement</span><span class="p">(</span><span class="n">part</span><span class="p">)</span>
+        <span class="k">print</span><span class="p">(</span><span class="n">screw</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+        <span class="n">replaced_part</span> <span class="o">=</span> <span class="n">screw</span><span class="o">.</span><span class="n">replace_metric</span><span class="p">()</span>
+        <span class="k">print</span><span class="p">(</span><span class="n">replaced_part</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-5'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-5'>#</a>
+      </div>
+      <p>TODO: Reprint quantity after the process done.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="n">quantites</span><span class="p">(</span><span class="n">parts</span><span class="o">.</span><span class="n">count_fasteners</span><span class="p">,</span> <span class="n">parts</span><span class="o">.</span><span class="n">count_imperial</span><span class="p">,</span> <span class="n">parts</span><span class="o">.</span><span class="n">count_metric</span><span class="p">,</span> <span class="n">state</span><span class="o">=</span><span class="s2">&quot;(Changed state)&quot;</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-6'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-6'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">def</span> <span class="nf">quantites</span><span class="p">(</span><span class="n">total</span><span class="p">,</span> <span class="n">count_imperial</span><span class="p">,</span> <span class="n">count_metric</span><span class="p">,</span> <span class="n">state</span><span class="o">=</span><span class="s2">&quot;(Current state)&quot;</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-7'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-7'>#</a>
+      </div>
+      <p>TODO: number of screws, nuts, washers</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">print</span><span class="p">(</span><span class="s2">&quot;{}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">state</span><span class="p">))</span>
+    <span class="k">print</span><span class="p">(</span><span class="s2">&quot;Total number of fasteners: {}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">total</span><span class="p">))</span>
+    <span class="k">print</span><span class="p">(</span><span class="s2">&quot;...............- imperial: {}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">count_imperial</span><span class="p">))</span>
+    <span class="k">print</span><span class="p">(</span><span class="s2">&quot;...............- metric  : {}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">count_metric</span><span class="p">))</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-8'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-8'>#</a>
+      </div>
+      <p>Bolts converts screws,nuts,washers from imperial to metric, (Press y/[Y] to proceed.):</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">def</span> <span class="nf">confirmation</span><span class="p">(</span><span class="n">func</span><span class="p">):</span>
+    <span class="n">response</span> <span class="o">=</span> <span class="nb">raw_input</span><span class="p">(</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-9'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-9'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="p">)</span>
+    <span class="k">if</span> <span class="n">response</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;y&#39;</span><span class="p">]:</span>
+        <span class="k">print</span><span class="p">(</span><span class="s1">&#39;Process canceled&#39;</span><span class="p">)</span>
+        <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">()</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">func</span><span class="p">()</span>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="n">confirmation</span><span class="p">(</span><span class="n">main</span><span class="p">)</span>
+
+</pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+</div>
+</body>
