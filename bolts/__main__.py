@@ -1,50 +1,103 @@
 """ Replace all fasteners from imperial to metric.
 """
 
-from api import Api, PartsOccurrences, PartElement
-from sources import screwlib_path
+import sys
+
+from api import Api, PartElement, PartsOccurrences
+
 
 def main():
-    session = Api()
-    print("* Author: recs")
-    print("* Last update: 2020-00-00")
-    session.check_valid_version('Solid Edge ST7','Solid Edge 2019')
-    assembly = session.active_document()
-    print("* part-number: %s\n" % assembly.name)
+    try:
+        session = Api()
+        print("\n* Author: recs")
+        print("* Last update: 2020-02-25")
+        session.check_valid_version("Solid Edge ST7", "Solid Edge 2019")
+        assembly = session.active_document()
+        print("* part-number: {}\n".format(assembly.name))
 
-    # Check if part is sheetmetal or other type of part.
-    assert assembly.name.endswith(".asm"), "This macro only works on .asm not %s" %assembly.name[-4:]
+        # Check if part is sheetmetal or other type of part.
+        assert assembly.name.endswith(".asm"), (
+            "This macro only works on .asm not {}".format(assembly.name[-4:])
+        )
 
-    parts = PartsOccurrences(assembly)
+        parts = PartsOccurrences(assembly)
 
-    # Display quantity of parts in the assembly.
-    quantites(parts.count_fasteners, parts.count_imperial, parts.count_metric)
+        # Display quantity of parts in the assembly.
+        quantites(parts.count_fasteners, parts.count_imperial, parts.count_metric)
 
-    # Replace screws.
-    for part in parts.screws():
-        screw =  PartElement(part)
-        print(screw.name)
-        replaced_part = screw.replace_metric()
-        print(replaced_part)
+        print(" "+ 60 * "-")
+        print("{:^30s}->{:^30s}".format("Current", "Changed to"))
+        print(" "+ 60 * "=")
 
 
-    #TODO: Reprint quantity after the process done.
-    quantites(parts.count_fasteners, parts.count_imperial, parts.count_metric, state="(Changed state)")
+        # Replace screws.
+        for part in parts.screws():
+            screw = PartElement(part)
+            screw_name_imperial = screw.name
+            screw_name_metric = screw.set_metric()
+            screw.replace_element(screw_name_metric)
+            print(" {:<30s} {:<30s}".format(screw_name_imperial, screw_name_metric))
+
+        # # Replace nuts.
+        for part in parts.nuts():
+            nut = PartElement(part)
+            nut_name_imperial = nut.name
+            nut_name_metric = nut.set_metric()
+            nut.replace_element(nut_name_metric)
+            print(" {:<30s} {:<30s}".format(nut_name_imperial, nut_name_metric))
+
+        # # Replace washers.
+        for part in parts.washers():
+            washer = PartElement(part)
+            washer_name_imperial = washer.name
+            washer_name_metric = washer.set_metric()
+            washer.replace_element(washer_name_metric)
+            print(" {:<30s} {:<30s}".format(washer_name_imperial, washer_name_metric))
+
+        print(" "+ 60 * "-")
+        print("\n")
+
+
+        quantites(
+            parts.count_fasteners,
+            parts.count_imperial,
+            parts.count_metric,
+            state="(Changed state)",
+        )
+
+    except NameError as Ne:
+        #TODO: add the name of the fastener in a log file in the user tempo.
+        pass
+    else:
+        pass
+    finally:
+        raw_input("\n(Press any key to exit ;)")
+        sys.exit()
 
 
 def quantites(total, count_imperial, count_metric, state="(Current state)"):
-    #TODO: number of screws, nuts, washers
+    """
+    Display quantites of fasteners.
+
+    Description:
+        Maint to show the user before and after the excution of the macro.
+
+    Parameters: ...
+
+    """
     print("{}".format(state))
-    print("Total number of fasteners: {}\n".format(total))
-    print("...............- imperial: {}\n".format(count_imperial))
-    print("...............- metric  : {}\n".format(count_metric))
+    print("Total number of fasteners: {}".format(total))
+    print(" - imperial: ............. {}".format(count_imperial))
+    print(" - metric  : ............. {}\n".format(count_metric))
+
 
 def confirmation(func):
+    """ Prompt the user to confirm the execution of the process."""
     response = raw_input(
-    """Bolts converts screws,nuts,washers from imperial to metric, (Press y/[Y] to proceed.): """
+        """\nBolts: Converts fasteners from imperial to metric, (Press y/[Y] to proceed.): """
     )
-    if response.lower() not in ['y']:
-        print('Process canceled')
+    if response.lower() not in ["y"]:
+        print("Process canceled")
         sys.exit()
     else:
         func()
