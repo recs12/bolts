@@ -1,9 +1,9 @@
-#1 - "Current"
-#2 - "Metric   [Zinc Plated]"
-#3 - "Imperial [SS-304]"
-#4 - "Metric   [SS-304]"
-#5 - "Imperial [SS-316]"
-#6 - "Metric   [SS-316]"
+# 1 - "Current"
+# 2 - "Metric   [Zinc Plated]"
+# 3 - "Imperial [SS-304]"
+# 4 - "Metric   [SS-304]"
+# 5 - "Imperial [SS-316]"
+# 6 - "Metric   [SS-316]"
 
 cad_switcher = {
     "VTHE_0.875-9X2.500_GR5.par": {

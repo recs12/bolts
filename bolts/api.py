@@ -19,8 +19,8 @@ clr.AddReference("System.Runtime.InteropServices")
 # CAD = r"..\hardware"
 CAD = r"J:\PTCR\Users\RECS\hardware"
 
-class Api:
 
+class Api:
     def __init__(self):
         # Connect to a running instance of Solid Edge
         self.api = SRI.Marshal.GetActiveObject("SolidEdge.Application")
@@ -39,7 +39,6 @@ class Api:
 
 
 class PartsOccurrences:
-
     def __init__(self, doc):
         self.occurrences = doc.Occurrences
         self.count = self.occurrences.Count
@@ -96,7 +95,6 @@ class PartsOccurrences:
 
 
 class PartElement:
-
     def __init__(self, item):
         self.part = item
         self.name = item.PartDocument.Name
@@ -118,4 +116,6 @@ class PartElement:
         elif metric_element is None:
             pass
         else:
-            self.part.Replace(NewOccurrenceFileName=os.path.join(CAD, metric_element), ReplaceAll=True)
+            self.part.Replace(
+                NewOccurrenceFileName=os.path.join(CAD, metric_element), ReplaceAll=True
+            )

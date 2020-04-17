@@ -16,19 +16,18 @@ def main():
         print("* part-number: {}\n".format(assembly.name))
 
         # Check if part is sheetmetal or other type of part.
-        assert assembly.name.endswith(".asm"), (
-            "This macro only works on .asm not {}".format(assembly.name[-4:])
-        )
+        assert assembly.name.endswith(
+            ".asm"
+        ), "This macro only works on .asm not {}".format(assembly.name[-4:])
 
         parts = PartsOccurrences(assembly)
 
         # Display quantity of parts in the assembly.
         quantites(parts.count_fasteners, parts.count_imperial, parts.count_metric)
 
-        print(" "+ 60 * "-")
+        print(" " + 60 * "-")
         print("{:^30s}->{:^30s}".format("Current", "Changed to"))
-        print(" "+ 60 * "=")
-
+        print(" " + 60 * "=")
 
         # Replace screws.
         for part in parts.screws():
@@ -54,9 +53,8 @@ def main():
             washer.replace_element(washer_name_metric)
             print(" {:<30s} {:<30s}".format(washer_name_imperial, washer_name_metric))
 
-        print(" "+ 60 * "-")
+        print(" " + 60 * "-")
         print("\n")
-
 
         quantites(
             parts.count_fasteners,
@@ -66,7 +64,7 @@ def main():
         )
 
     except NameError as Ne:
-        #TODO: add the name of the fastener in a log file in the user tempo.
+        # TODO: add the name of the fastener in a log file in the user tempo.
         pass
     else:
         pass
