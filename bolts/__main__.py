@@ -10,7 +10,7 @@ def main():
     try:
         session = Api()
         print("\n* Author: recs")
-        print("* Last update: 2020-02-25")
+        print("* Last update: 2020-04-17")
         session.check_valid_version("Solid Edge ST7", "Solid Edge 2019")
         assembly = session.active_document()
         print("* part-number: {}\n".format(assembly.name))
@@ -100,6 +100,28 @@ def confirmation(func):
     else:
         func()
 
+def prompt_selection():
+    choice = raw_input(
+        """
+        select:
+            [2] - Metric  [Zinc Plated]
+            [3] - Imperial [SS-304]
+            [4] - Metric   [SS-304]
+            [5] - Imperial [SS-316]
+            [6] - Metric   [SS-316]
+        """)
+
+    return {
+            1: "Cancel",
+            2: "Metric [Zinc Plated]",
+            3: "Imperial [SS-304]",
+            4: "Metric [SS-304]",
+            5: "Imperial [SS-316]",
+            6: "Metric [SS-316]",
+    }.get(choice)
+
+
 
 if __name__ == "__main__":
     confirmation(main)
+

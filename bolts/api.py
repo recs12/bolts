@@ -9,6 +9,7 @@ import os
 import clr
 import System.Runtime.InteropServices as SRI
 from convertion import CONVERTION_CAD
+from cad_switcher import cad_switcher
 from inventory import INVENTORY_NUTS, INVENTORY_SCREWS, INVENTORY_WASHERS
 
 clr.AddReference("Interop.SolidEdge")

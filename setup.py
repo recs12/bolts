@@ -8,7 +8,7 @@ with open('bolts/__init__.py', 'r') as f:
             version = line.strip().split('=')[1].strip(' \'"')
             break
     else:
-        version = '0.0.4'
+        version = '0.0.5'
 
 with open('README.rst', 'r', encoding='utf-8') as f:
     readme = f.read()
@@ -20,10 +20,10 @@ setup(
     version=version,
     description='',
     long_description=readme,
-    author='U.N. Owen',
-    author_email='me@un.known',
-    maintainer='U.N. Owen',
-    maintainer_email='me@un.known',
+    author='Slimane, Rechdi',
+    author_email='slimane.rechdi@gmail.com',
+    maintainer='Slimane, Rechdi',
+    maintainer_email='slimane.rechdi@gmail.com',
     url='https://github.com/_/bolts',
     license='MIT/Apache-2.0',
 
