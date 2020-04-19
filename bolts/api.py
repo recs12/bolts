@@ -4,13 +4,21 @@ Api solidedge
 
 """
 
+import json
 import os
 
 import clr
+
 import System.Runtime.InteropServices as SRI
-from convertion import CONVERTION_CAD
-from cad_switcher import cad_switcher
-from inventory import INVENTORY_NUTS, INVENTORY_SCREWS, INVENTORY_WASHERS
+
+# from convertion import CONVERTION_CAD
+# from inventory import INVENTORY_NUTS, INVENTORY_SCREWS, INVENTORY_WASHERS
+with open("inventory.json") as i:
+    inventory = json.load(i)
+
+# from cad_switcher import cad_switcher
+with open("tree.json") as t:
+    tree = json.load(t)
 
 clr.AddReference("Interop.SolidEdge")
 clr.AddReference("System.Runtime.InteropServices")
@@ -52,19 +60,21 @@ class PartsOccurrences:
         return (
             screw
             for screw in self.occurrences
-            if screw.PartDocument.name in INVENTORY_SCREWS
+            if screw.PartDocument.name in inventory.get("SCREWS")
         )
 
     def nuts(self):
         return (
-            nut for nut in self.occurrences if nut.PartDocument.name in INVENTORY_NUTS
+            nut
+            for nut in self.occurrences
+            if nut.PartDocument.name in inventory.get("NUTS")
         )
 
     def washers(self):
         return (
             washer
             for washer in self.occurrences
-            if washer.PartDocument.name in INVENTORY_WASHERS
+            if washer.PartDocument.name in inventory.get("WASHER")
         )
 
     @property
@@ -100,23 +110,19 @@ class PartElement:
         self.part = item
         self.name = item.PartDocument.Name
 
-    def set_metric(self):
-        if self.name in CONVERTION_CAD.keys():
-            return CONVERTION_CAD.get(self.name)
-        elif self.name in CONVERTION_CAD.values():
-            return "metric"
+    def set_material(self, material):
+        if self.name in fasteners.keys():
+            return fasteners.get(self.name, {}).get(material)
         else:
             return "unknown"
 
-    def replace_element(self, metric_element):
-        if metric_element == "metric":
-            pass
-        elif metric_element == "unknown":
+    def replace_element(self, new_element):
+        if new_element == "unknown":
             # log the name of a log file for correction on the convertion file.
             pass
-        elif metric_element is None:
+        elif new_element is None:
             pass
         else:
             self.part.Replace(
-                NewOccurrenceFileName=os.path.join(CAD, metric_element), ReplaceAll=True
+                NewOccurrenceFileName=os.path.join(CAD, new_element), ReplaceAll=True
             )
