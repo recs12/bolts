@@ -8,4 +8,4 @@ ipyc.exe /main:./bolts/__main__.py ./bolts/api.py ./bolts/convertion.py ^
 /platform:x64 ^
 /standalone ^
 /target:exe ^
-/win32icon:icon.ico 
+/win32icon:bolt.ico 

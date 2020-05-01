@@ -4,21 +4,13 @@ Api solidedge
 
 """
 
-import json
 import os
-
 import clr
 
 import System.Runtime.InteropServices as SRI
 
-# from convertion import CONVERTION_CAD
-# from inventory import INVENTORY_NUTS, INVENTORY_SCREWS, INVENTORY_WASHERS
-with open("inventory.json") as i:
-    inventory = json.load(i)
-
-# from cad_switcher import cad_switcher
-with open("tree.json") as t:
-    tree = json.load(t)
+from inventory import inventory
+from tree import tree
 
 clr.AddReference("Interop.SolidEdge")
 clr.AddReference("System.Runtime.InteropServices")
@@ -111,8 +103,8 @@ class PartElement:
         self.name = item.PartDocument.Name
 
     def set_material(self, material):
-        if self.name in fasteners.keys():
-            return fasteners.get(self.name, {}).get(material)
+        if self.name in tree.keys():
+            return tree.get(self.name, {}).get(material)
         else:
             return "unknown"
 
