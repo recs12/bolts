@@ -72,7 +72,7 @@ def replace_parts():
     else:
         pass
     finally:
-        raw_input("\n(Press any key to exit ;)")
+        raw_input("\nPress any key to exit...")
         sys.exit()
 
 
